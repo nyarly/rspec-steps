@@ -1,0 +1,6 @@
+--format documentation
+--out last_run
+-I /home/judson/ruby/gems/rspec-steps/spec_help/interpose
+-I /home/judson/ruby/gems/rspec-steps/lib
+-I /home/judson/ruby/gems/rspec-steps/spec_help
+--require spec_helper

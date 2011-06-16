@@ -1,0 +1,17 @@
+
+RSpec::Core::ExampleGroup defined as stepwise
+  ::steps
+    should create an ExampleGroup that includes RSpec::Stepwise
+  with Stepwise included
+    should retain instance variables between steps
+    should mark later examples as pending if one fails
+    should allow nested steps
+    should not allow nested normal contexts (PENDING: A correct approach - in the meantime, this behavior is undefined)
+
+Pending:
+  RSpec::Core::ExampleGroup defined as stepwise with Stepwise included should not allow nested normal contexts
+    # A correct approach - in the meantime, this behavior is undefined
+    # ./spec/example_group.rb:63
+
+Finished in 0.10849 seconds
+5 examples, 0 failures, 1 pending

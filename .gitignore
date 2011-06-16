@@ -1,0 +1,7 @@
+_MTN
+doc/coverage
+last_run
+pkg
+.conductor
+.mtn-ignore
+*.sw?
