@@ -14,25 +14,98 @@ module RSpecStepwise
     end
   end
 
+  def before(*args, &block)
+    if args.first == :each
+      puts "before blocks declared for steps are always treated as :all scope"
+    end
+    super
+  end
+
+  def after(*args, &block)
+    if args.first == :each
+      puts "after blocks declared for steps are always treated as :all scope"
+    end
+    super
+  end
+
+  def around(*args, &block)
+    if args.first == :each
+      puts "around :each blocks declared for steps are treated as :all scope"
+    end
+    super
+  end
+
+  def eval_before_alls(example_group_instance)
+    super
+    example_group_instance.example = whole_list_example
+    world.run_hook_filtered(:before, :each, self, example_group_instance, example)
+    ancestors.reverse.each { |ancestor| ancestor.run_hook(:before, :each, example_group_instance) }
+  end
+
+  def eval_around_eachs(example)
+  end
+
+  def eval_before_eachs(example)
+  end
+
+  def eval_after_eachs(example)
+  end
+
+  def eval_after_alls(example_group_instance)
+    example_group_instance.example = whole_list_example
+    ancestors.each { |ancestor| ancestor.run_hook(:after, :each, example_group_instance) }
+    world.run_hook_filtered(:after, :each, self, example_group_instance, example)
+    super
+  end
+
+  def whole_list_example
+    RSpec::Core::Example.new(self, "step list", {})
+  end
+
+  def with_around_hooks(instance, &block)
+    hooks = around_hooks_for(self)
+    if hooks.empty?
+      yield
+    else
+      hooks.reverse.inject(Example.procsy(metadata)) do |procsy, around_hook|
+        Example.procsy(procsy.metadata) do
+          instance.instance_eval_with_args(procsy, &around_hook)
+        end
+      end.call
+    end
+  end
+
+  def perform_steps(name, *args, &customization_block)
+    shared_block = world.shared_example_groups[name]
+    raise "Could not find shared example group named \#{name.inspect}" unless shared_block
+
+    module_eval_with_args(*args, &shared_block)
+    module_eval(&customization_block) if customization_block
+  end
+
   def run_examples(reporter)
     instance = new
     set_ivars(instance, before_all_ivars)
 
+    instance.example = whole_list_example
+
     suspend_transactional_fixtures do
-      filtered_examples.inject(true) do |success, example|
-        break if RSpec.wants_to_quit 
-        unless success
-          reporter.example_started(example)
-          example.metadata[:pending] = true
-          example.metadata[:execution_result][:pending_message] = "Previous step failed"
-          example.metadata[:execution_result][:started_at] = Time.now
-          example.instance_eval{ record_finished :pending, :pending_message => "Previous step failed" }
-          reporter.example_pending(example)
-          next
+      with_around_hooks(instance) do
+        filtered_examples.inject(true) do |success, example|
+          break if RSpec.wants_to_quit
+          unless success
+            reporter.example_started(example)
+            example.metadata[:pending] = true
+            example.metadata[:execution_result][:pending_message] = "Previous step failed"
+            example.metadata[:execution_result][:started_at] = Time.now
+            example.instance_eval{ record_finished :pending, :pending_message => "Previous step failed" }
+            reporter.example_pending(example)
+            next
+          end
+          succeeded = example.run(instance, reporter)
+          RSpec.wants_to_quit = true if fail_fast? && !succeeded
+          success && succeeded
         end
-        succeeded = example.run(instance, reporter)
-        RSpec.wants_to_quit = true if fail_fast? && !succeeded
-        success && succeeded
       end
     end
   end
