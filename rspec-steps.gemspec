@@ -1,17 +1,17 @@
 Gem::Specification.new do |spec|
   spec.name		= "rspec-steps"
-  spec.version		= "0.0.1"
-  author_list = { 
+  spec.version		= "0.0.2"
+  author_list = {
     "Judson Lester" => "nyarly@gmail.com"
   }
   spec.authors		= author_list.keys
   spec.email		= spec.authors.map {|name| author_list[name]}
   spec.summary		= "I want steps in RSpec"
   spec.description	= <<-EOD
-  I don't like Cucumber.  I don't need plain text stories.  My clients either 
-  read code or don't read any test documents, so Cucumber is mostly useless.  
-  But often, especially in full integration tests, it would be nice to have 
-  steps in a test.  
+  I don't like Cucumber.  I don't need plain text stories.  My clients either
+  read code or don't read any test documents, so Cucumber is mostly useless.
+  But often, especially in full integration tests, it would be nice to have
+  steps in a test.
   EOD
 
   spec.rubyforge_project= spec.name.downcase
@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
   spec.licenses = ["MIT"]
   spec.require_paths = %w[lib/]
   spec.rubygems_version = "1.3.5"
-  
+
   dev_deps = [
     ["rake-rubygems", ">= 0.2.0"],
     ["hanna", "~> 0.1.0"],
