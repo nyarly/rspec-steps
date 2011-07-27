@@ -1,12 +1,18 @@
 require 'rspec-steps/stepwise'
 
-module RSpec::Core
-  class ExampleGroup
-    def self.steps(*args, &example_group_block)
-      describe(*args) do
-        extend RSpecStepwise
-        module_eval &example_group_block
-      end
+module RSpec::Steps
+  module ClassMethods
+    def steps(*args, &block)
+      options = if args.last.is_a?(Hash) then args.pop else {} end
+      options[:stepwise] = true
+      options[:caller] ||= caller
+      args.push(options)
+
+      describe(*args, &block)
     end
   end
 end
+
+RSpec::Core::ExampleGroup.extend RSpec::Steps::ClassMethods
+
+RSpec::configuration.include(RSpecStepwise, :stepwise => true)

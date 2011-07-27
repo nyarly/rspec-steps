@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    RSpec-Steps (0.0.1)
+    rspec-steps (0.0.3)
       rspec (>= 2.0)
 
 GEM
@@ -36,10 +36,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  RSpec-Steps!
   bundler (~> 1.0.0)
   hanna (~> 0.1.0)
   mailfactory (~> 1.4.0)
   rake-rubygems (>= 0.2.0)
   rcov
   rspec (>= 2.0)
+  rspec-steps!
