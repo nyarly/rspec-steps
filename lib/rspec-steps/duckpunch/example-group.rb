@@ -1,3 +1,4 @@
+require 'rspec/core/example_group'
 require 'rspec-steps/stepwise'
 
 module RSpec::Steps
@@ -14,5 +15,6 @@ module RSpec::Steps
 end
 
 RSpec::Core::ExampleGroup.extend RSpec::Steps::ClassMethods
+include RSpec::Steps::ClassMethods
 
 RSpec::configuration.include(RSpecStepwise, :stepwise => true)

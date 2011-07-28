@@ -1,12 +1,9 @@
 require 'rspec-steps/duckpunch/example-group'
 require 'rspec-steps/stepwise'
+require 'rspec/core/shared_example_group'
 
-module RSpec::Steps
-  module ObjectExtensions
-    alias :shared_steps :shared_context
-    alias :steps_shared_as :share_as
-  end
+module RSpec::Core::SharedExampleGroup
+  alias :shared_steps :share_examples_for
+  alias :steps_shared_as :share_as
 end
-
-include RSpec::Steps::ObjectExtensions
 extend RSpec::Steps::ClassMethods

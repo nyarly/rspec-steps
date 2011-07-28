@@ -9,7 +9,7 @@ describe RSpec::Core::ExampleGroup, "defined as stepwise" do
         group = steps "Test Steps" do
         end
       end
-      (class << group; self; end).included_modules.should include(RSpecStepwise)
+      (class << group; self; end).included_modules.should include(RSpecStepwise::ClassMethods)
     end
   end
 
@@ -18,8 +18,8 @@ describe RSpec::Core::ExampleGroup, "defined as stepwise" do
       group = nil
       sandboxed do
         group = steps "Test Steps" do
-          it { @a = 1 }
-          it { @a.should == 1}
+          it("sets @a"){ @a = 1 }
+          it("reads @a"){ @a.should == 1}
         end
         group.run
       end
@@ -42,7 +42,7 @@ describe RSpec::Core::ExampleGroup, "defined as stepwise" do
       group.examples[1].metadata[:pending].should be_true
     end
 
-    it "should allow nested steps" do
+    it "should allow nested steps", :pending => "Not really" do
       group = nil
       sandboxed do
         group = steps "Test Steps" do
@@ -59,7 +59,7 @@ describe RSpec::Core::ExampleGroup, "defined as stepwise" do
       end
       group.children[0].should have(2).examples
     end
-    
+
     it "should not allow nested normal contexts" do
       pending "A correct approach - in the meantime, this behavior is undefined"
       expect {
