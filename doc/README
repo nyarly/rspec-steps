@@ -1,30 +1,114 @@
-== RSpec Steps
-=== ( or: why would I want to relearn how to write specs? )
+# RSpec Steps
+## ( or: why would I want to relearn how to write specs? )
 
-RSpec Steps allows you to chain examples into a series of steps without having 
-to go the whole 9 yards over to Cucumber.  It's often incredibly useful to be 
-able to aseemble a series of tests that should all pass, but where completely 
-isolating them is less than sensible.
+RSpec Steps allows you to chain examples into a series of steps that run
+in sequence and which stop when a step fails.  It's often incredibly 
+useful to be able to aseemble a series of tests that should all pass, 
+but where completely isolating them is less than sensible.
 
 One excellent example is web site integration tests.  With RSpec steps you can 
 do:
 
-  steps "Add a user" do
-    it do
-      visit root
-      page.should have_text "Login"
-    end
+         steps "Login and change password" do
+           it "should show the login form" do
+             visit root
+             page.should have_text "Login"
+           end
+        
+           it "should successfully log in" do
+             fill_in :name, "Johnny User"
+             click "Login"
+             page.should have_text "Welcome, Johnny!"
+           end
+           
+           it "should load the password change form" do 
+             click "My Settings"
+             click "Update Password"
+             page.should have_selector("form#update_password")
+           end     
+        
+           it "should change the user's password successfully" do
+             fill_in :password, "foobar"
+             fill_in :password_confirmation, "foobar"
+             click "Change Password"
+             page.should have_text "Password changed successfully!"
+             User.find_by_name("Johnny User").valid_password?("foobar").should be_true 
+           end
+        
+         end
 
-    it do
-      fill_in :name, "Johnny User"
-      click "Login"
-      page.should have_text "Welcome, Johnny!"
-    end
-    
-    ...
-  end
+The examples above will be run in order.  State is preserved between examples
+inside a "steps" block: any DB transactions will not roll back until the entire 
+sequence has been complete. 
 
-Add dozens of steps to a set.  They get run in order, and the state of the 
-tests isn't reset between them.  Better still, if one step fails, the rest are 
-all marked "pending" so they don't even try to run, which helps speed up 
-testing.
+If any example inside the "steps" block fails, all remaining steps will be marked 
+pending and therefore skipped. 
+
+## Rationale
+
+RSpec's philosophy is that all examples should be completely independent.  This
+is a great philosophy for most purposes, and we recommend you stick to it in 
+almost all cases.  BUT, that complete separation of examples really sucks when 
+you're trying to write long stories involving many requests.   You are usually 
+stuck with three choices:
+
+1. Write a sequence of examples, each of which repeats the behavior of all previous examples. Downside: horrendously inefficient.
+2. Write a single huge example which performs the entire story.  Downside: only one description, no independent reporting of the steps of the story.
+3. Use Cucumber.  Downside: We agree totally with this guy: http://bit.ly/dmXqnY
+
+RSpec-steps intentionally breaks RSpec's "independent" philosophy to let us get the
+only thing we really want from Cucumber - the ability to execute some examples in sequence,
+and skip subsequent steps after a failure.
+
+## Caveats and cautions
+
+Don't call "describe" inside of "steps".  The behavior is undefined and probably bad.  It's 
+hard to imagine what this should actually mean in any case.  Future versions of rspec-steps 
+will consider this an error.
+
+Any call to "before" inside a steps block is treated like before(:all) and is run only
+once before the first step.  Or perhaps more accurately, any call to before() is treated 
+like before(:each) ... but for these purposes the entire steps block is treated like a 
+single example.
+
+## Advanced stuff:  shared steps
+
+If you have (for example) two user stories that share the same first N steps but then
+diverge, you can DRY your code out with shared_steps blocks, like so:
+
+       shared_steps "For a logged-in user" do
+         it "should have login form"
+           visit root
+           page.should have_selector "form#login"
+         end
+
+         it "should log the user in" do
+           fill_in :name, "Johnny User"
+           page.should have_text "Welcome, Johnny!"
+         end
+       end
+
+       steps "updating password" do
+         perform_steps "For a logged-in user" 
+          
+         it "should update the password" do
+           ...
+         end
+       end
+
+       steps "uploading a profile picture" do
+         perform_steps "For a logged-in user"
+       
+         it "should upload a picture" do
+            ...
+         end
+       end
+
+
+       
+
+ 
+        
+
+
+
