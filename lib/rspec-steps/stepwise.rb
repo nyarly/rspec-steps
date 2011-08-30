@@ -41,6 +41,7 @@ module RSpecStepwise
       example_group_instance.example = whole_list_example
       world.run_hook_filtered(:before, :each, self, example_group_instance, whole_list_example)
       ancestors.reverse.each { |ancestor| ancestor.run_hook(:before, :each, example_group_instance) }
+      store_before_all_ivars(example_group_instance)
     end
 
     def eval_around_eachs(example)
@@ -122,6 +123,9 @@ module RSpecStepwise
     result = yield
     @ivars_indelible = old_value
     result
+  rescue Object
+    @ivars_indelible = old_value
+    raise
   end
 
   def instance_variable_set(name, value)

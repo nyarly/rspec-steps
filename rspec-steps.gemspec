@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name		= "rspec-steps"
-  spec.version		= "0.0.5"
+  spec.version		= "0.0.6"
   author_list = {
     "Judson Lester" => "judson@lrdesign.com",
     "Evan Dorn" => "evan@lrdesign.com"
