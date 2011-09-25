@@ -1,11 +1,11 @@
 PATH
   remote: .
   specs:
-    rspec-steps (0.0.4)
+    rspec-steps (0.0.6)
       rspec (>= 2.6)
 
 GEM
-  remote: http://judson:hEi4lOra@gems.lrdesign.com/
+  remote: http://lrdesign:quiS6Nef@gems.lrdesign.com/
   remote: http://gemcutter.org/
   remote: http://gems.github.com/
   specs:
