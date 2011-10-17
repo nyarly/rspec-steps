@@ -36,8 +36,18 @@ module RSpecStepwise
       super
     end
 
+
     def eval_before_alls(example_group_instance)
       super
+      stepped_before_hooks(example_group_instance)
+    end
+
+    def run_before_all_hooks(example_group_instance)
+      super
+      stepped_before_hooks(example_group_instance)
+    end
+
+    def stepped_before_hooks(example_group_instance)
       example_group_instance.example = whole_list_example
       world.run_hook_filtered(:before, :each, self, example_group_instance, whole_list_example)
       ancestors.reverse.each { |ancestor| ancestor.run_hook(:before, :each, example_group_instance) }
@@ -46,18 +56,30 @@ module RSpecStepwise
 
     def eval_around_eachs(example)
     end
+    alias run_around_each_hooks eval_around_eachs
 
     def eval_before_eachs(example)
     end
+    alias run_before_each_hooks eval_before_eachs
 
     def eval_after_eachs(example)
     end
+    alias run_after_each_hooks eval_after_eachs
 
     def eval_after_alls(example_group_instance)
+      stepped_after_hooks(example_group_instance)
+      super
+    end
+
+    def run_after_all_hooks(example_group_instance)
+      stepped_after_hooks(example_group_instance)
+      super
+    end
+
+    def stepped_after_hooks(example_group_instance)
       example_group_instance.example = whole_list_example
       ancestors.each { |ancestor| ancestor.run_hook(:after, :each, example_group_instance) }
       world.run_hook_filtered(:after, :each, self, example_group_instance, whole_list_example)
-      super
     end
 
     def whole_list_example
