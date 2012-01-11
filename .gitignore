@@ -5,3 +5,5 @@ pkg
 .conductor
 .mtn-ignore
 *.sw?
+rspec-steps-*.gem
+.bundle

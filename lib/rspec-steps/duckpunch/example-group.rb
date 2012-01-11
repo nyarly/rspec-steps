@@ -1,4 +1,4 @@
-require 'rspec/core/example_group'
+require 'rspec/core'
 require 'rspec-steps/stepwise'
 
 module RSpec::Steps
