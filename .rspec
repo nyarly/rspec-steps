@@ -1,5 +1,5 @@
--I /home/judson/ruby/gems/rspec-steps/spec_help/interpose
--I /home/judson/ruby/gems/rspec-steps/lib
--I /home/judson/ruby/gems/rspec-steps/spec_help
+-I ./spec_help/interpose
+-I ./lib
+-I ./spec_help
 --require spec_helper
 --pattern *.rb
