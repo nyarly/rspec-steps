@@ -49,10 +49,11 @@ module RSpecStepwise
 
     def stepped_before_hooks(example_group_instance)
       example_group_instance.example = whole_list_example
+
       if world.respond_to?(:run_hook_filtered) # Rspec < 2.10
         world.run_hook_filtered(:before, :each, self, example_group_instance, whole_list_example)
       else # Rspec >= 2.10
-        self.run_hook(:before, :each, example_group_instance)
+        run_hook(:before, :each, whole_list_example)
       end
       ancestors.reverse.each { |ancestor| ancestor.run_hook(:before, :each, example_group_instance) }
       store_before_all_ivars(example_group_instance)
@@ -86,7 +87,7 @@ module RSpecStepwise
       if world.respond_to?(:run_hook_filtered) # Rspec < 2.10
         world.run_hook_filtered(:before, :each, self, example_group_instance, whole_list_example)
       else # Rspec >= 2.10
-        self.run_hook(:before, :each, example_group_instance)
+        run_hook(:before, :each, whole_list_example)
       end
     end
 
@@ -97,7 +98,12 @@ module RSpecStepwise
     end
 
     def with_around_hooks(instance, &block)
-      hooks = around_hooks_for(self)
+      if self.respond_to?(:around_hooks_for) # rSpec < 2.10.0
+        hooks = around_hooks_for(self)
+      else
+        hooks = around_each_hooks_for(self) # rSpec >= 2.10.0
+      end
+
       if hooks.empty?
         yield
       else
