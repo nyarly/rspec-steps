@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name		= "rspec-steps"
-  spec.version		= "0.0.8"
+  spec.version		= "0.0.9"
   author_list = {
     "Judson Lester" => "judson@lrdesign.com",
     "Evan Dorn" => "evan@lrdesign.com"
@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   lib/rspec-steps/duckpunch/object-extensions.rb
   doc/README
   doc/Specifications
-  spec/example_group.rb
+  spec/example_group_spec.rb
   spec_help/spec_helper.rb
   spec_help/gem_test_suite.rb
   spec_help/rspec-sandbox.rb
@@ -73,5 +73,3 @@ Gem::Specification.new do |spec|
 
   spec.post_install_message = "Another tidy package brought to you by Judson Lester of Logical Reality Design"
 end
-
-

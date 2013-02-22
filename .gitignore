@@ -7,3 +7,4 @@ pkg
 *.sw?
 rspec-steps-*.gem
 .bundle
+corundum/
