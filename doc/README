@@ -106,6 +106,9 @@ diverge, you can DRY your code out with shared_steps blocks, like so:
 
 ## Versions and Dependencies
 
+0.0.9: Released Feb 22, 2013.
+        NOTES: works with rspec 2.6 through 2.10.  Does not work with rspec >= 2.11
+
 0.0.8: Released Jan 11, 2012.
         NOTES: Will not work with rspec > 2.9.
 
