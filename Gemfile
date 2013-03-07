@@ -1,6 +1,6 @@
 source "http://lrdesign:quiS6Nef@gems.lrdesign.com"
-source "http://gemcutter.org"
-source "http://gems.github.com"
+source :rubygems
 
 gem 'rspec', "~> 2.10.0"
+gem 'fuubar'
 gemspec
