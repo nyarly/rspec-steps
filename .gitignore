@@ -8,3 +8,6 @@ pkg
 rspec-steps-*.gem
 .bundle
 corundum/
+.sass-cache/
+.yardoc/
+gh-pages/

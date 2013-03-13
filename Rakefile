@@ -22,7 +22,6 @@ module Corundum
     end
     task tk.finished_files.build => vc["is_checked_in"]
     yd = YARDoc.new(tk) do |yd|
-      yd.extra_files = ["Rakefile.rb"]
     end
     all_docs = DocumentationAssembly.new(tk, yd, rspec, cov)
     pages = GithubPages.new(all_docs)
