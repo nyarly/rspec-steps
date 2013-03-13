@@ -1,15 +1,63 @@
 module RSpecStepwise
+  class WholeListExample < RSpec::Core::Example
+    def initialize(example_group_class, descriptions, metadata)
+      super
+      build_example_block
+    end
+
+    def start(reporter)
+    end
+
+    def finish(reporter)
+    end
+
+    def build_example_block
+      #variables of concern: reporter, instance
+      @example_block = proc do
+        begin
+          self.class.filtered_examples.inject(true) do |success, example|
+            break if RSpec.wants_to_quit
+            example.extend StepExample
+            unless success
+              example.metadata[:pending] = true
+              example.metadata[:execution_result][:pending_message] = "Previous step failed"
+            end
+            succeeded = with_indelible_ivars do
+              example.run(self, reporter)
+            end
+            RSpec.wants_to_quit = true if self.class.fail_fast? && !succeeded
+            success && succeeded
+          end
+        end
+      end
+    end
+  end
+
+  module StepExample
+    def run_before_each
+    end
+
+    def run_after_each
+    end
+
+    def with_around_hooks
+      yield
+    end
+  end
+
   module ClassMethods
     #TODO: This is hacky and needs a more general solution
     #Something like cloning the current conf and having RSpec::Stepwise::config ?
     def suspend_transactional_fixtures
       if self.respond_to? :use_transactional_fixtures
-        old_val = self.use_transactional_fixtures
-        self.use_transactional_fixtures = false
+        begin
+          old_val = self.use_transactional_fixtures
+          self.use_transactional_fixtures = false
 
-        yield
-
-        self.use_transactional_fixtures = old_val
+          yield
+        ensure
+          self.use_transactional_fixtures = old_val
+        end
       else
         yield
       end
@@ -36,85 +84,6 @@ module RSpecStepwise
       super
     end
 
-
-    def eval_before_alls(example_group_instance)
-      super
-      stepped_before_hooks(example_group_instance)
-    end
-
-    def run_before_all_hooks(example_group_instance)
-      super
-      stepped_before_hooks(example_group_instance)
-    end
-
-    def stepped_before_hooks(example_group_instance)
-      example_group_instance.example = whole_list_example
-
-      if world.respond_to?(:run_hook_filtered) # Rspec < 2.10
-        world.run_hook_filtered(:before, :each, self, example_group_instance, whole_list_example)
-      else # Rspec >= 2.10
-        run_hook(:before, :each, whole_list_example)
-      end
-      ancestors.reverse.each { |ancestor| ancestor.run_hook(:before, :each, example_group_instance) }
-      store_before_all_ivars(example_group_instance)
-    end
-
-    def eval_around_eachs(example)
-    end
-    alias run_around_each_hooks eval_around_eachs
-
-    def eval_before_eachs(example)
-    end
-    alias run_before_each_hooks eval_before_eachs
-
-    def eval_after_eachs(example)
-    end
-    alias run_after_each_hooks eval_after_eachs
-
-    def eval_after_alls(example_group_instance)
-      stepped_after_hooks(example_group_instance)
-      super
-    end
-
-    def run_after_all_hooks(example_group_instance)
-      stepped_after_hooks(example_group_instance)
-      super
-    end
-
-    def stepped_after_hooks(example_group_instance)
-      example_group_instance.example = whole_list_example
-      ancestors.each { |ancestor| ancestor.run_hook(:after, :each, example_group_instance) }
-      if world.respond_to?(:run_hook_filtered) # Rspec < 2.10
-        world.run_hook_filtered(:before, :each, self, example_group_instance, whole_list_example)
-      else # Rspec >= 2.10
-        run_hook(:before, :each, whole_list_example)
-      end
-    end
-
-    def whole_list_example
-      @whole_list_example ||= begin
-                                RSpec::Core::Example.new(self, "step list", {})
-                              end
-    end
-
-    def with_around_hooks(instance, &block)
-      if self.respond_to?(:around_hooks_for) # rSpec < 2.10.0
-        hooks = around_hooks_for(self)
-      else
-        hooks = around_each_hooks_for(self) # rSpec >= 2.10.0
-      end
-
-      if hooks.empty?
-        yield
-      else
-        hooks.reverse.inject(Example.procsy(metadata)) do |procsy, around_hook|
-          Example.procsy(procsy.metadata) do
-            instance.instance_eval_with_args(procsy, &around_hook)
-          end
-        end.call
-      end
-    end
-
     def perform_steps(name, *args, &customization_block)
       shared_block = world.shared_example_groups[name]
       raise "Could not find shared example group named \#{name.inspect}" unless shared_block
@@ -124,35 +93,20 @@ module RSpecStepwise
     end
 
     def run_examples(reporter)
+      whole_list_example = WholeListExample.new(self, "step list", {})
+
       instance = new
-
       set_ivars(instance, before_all_ivars)
-
       instance.example = whole_list_example
+      instance.reporter = reporter
 
       suspend_transactional_fixtures do
-        with_around_hooks(instance) do
-          filtered_examples.inject(true) do |success, example|
-            break if RSpec.wants_to_quit
-            unless success
-              reporter.example_started(example)
-              example.metadata[:pending] = true
-              example.metadata[:execution_result][:pending_message] = "Previous step failed"
-              example.metadata[:execution_result][:started_at] = Time.now
-              example.instance_eval{ record_finished :pending, :pending_message => "Previous step failed" }
-              reporter.example_pending(example)
-              next
-            end
-            succeeded = instance.with_indelible_ivars do
-              example.run(instance, reporter)
-            end
-            RSpec.wants_to_quit = true if fail_fast? && !succeeded
-            success && succeeded
-          end
-        end
+        whole_list_example.run(instance, reporter)
       end
     end
   end
+
+  attr_accessor :reporter
 
   def with_indelible_ivars
     old_value, @ivars_indelible = @ivars_indelible, true
