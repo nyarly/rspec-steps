@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name		= "rspec-steps"
-  spec.version		= "0.0.9"
+  spec.version		= "0.1.0"
   author_list = {
     "Judson Lester" => "judson@lrdesign.com",
     "Evan Dorn" => "evan@lrdesign.com"
@@ -69,7 +69,7 @@ Gem::Specification.new do |spec|
   spec.rdoc_options	+= %w{--main doc/README }
   spec.rdoc_options	+= ["--title", "#{spec.name}-#{spec.version} RDoc"]
 
-  spec.add_dependency("rspec", ">= 2.6")
+  spec.add_dependency("rspec", ">= 2.6", "< 2.14.0")
 
   spec.post_install_message = "Another tidy package brought to you by Judson Lester of Logical Reality Design"
 end

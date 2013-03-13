@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    rspec-steps (0.0.9)
-      rspec (>= 2.6)
+    rspec-steps (0.1.0)
+      rspec (>= 2.6, < 2.14.0)
 
 GEM
   remote: http://lrdesign:quiS6Nef@gems.lrdesign.com/
