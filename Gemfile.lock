@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rspec-steps (0.1.0)
+    rspec-steps (0.1.1)
       rspec (>= 2.6, < 2.14.0)
 
 GEM

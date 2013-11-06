@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name		= "rspec-steps"
-  spec.version		= "0.1.0"
+  spec.version		= "0.1.1"
   author_list = {
     "Judson Lester" => "judson@lrdesign.com",
     "Evan Dorn" => "evan@lrdesign.com"
@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.summary		= "I want steps in RSpec"
   spec.description	= <<-EOD
   I don't like Cucumber.  I don't need plain text stories.  My clients either
-  read code or don't read any test documents, so Cucumber is mostly useless.
+  read code or don't read any test documents, so Cucumber is mostly useless to me.
   But often, especially in full integration tests, it would be nice to have
   steps in a test.
   EOD
