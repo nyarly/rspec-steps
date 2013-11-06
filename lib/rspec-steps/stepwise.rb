@@ -1,14 +1,23 @@
 module RSpecStepwise
+  class ApatheticReporter < ::RSpec::Core::Reporter
+    def notify(*args)
+      #noop
+    end
+  end
+
   class WholeListExample < RSpec::Core::Example
     def initialize(example_group_class, descriptions, metadata)
       super
+      @reporter = ApatheticReporter.new
       build_example_block
     end
 
     def start(reporter)
+      super(@reporter)
     end
 
     def finish(reporter)
+      super(@reporter)
     end
 
     def build_example_block
