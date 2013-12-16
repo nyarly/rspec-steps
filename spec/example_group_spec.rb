@@ -29,6 +29,25 @@ describe RSpec::Core::ExampleGroup, "defined as stepwise" do
       end
     end
 
+    it "should mark later examples as failed if a before hook fails" do
+      group = nil
+      exception = Exception.new "Testing Error"
+
+      sandboxed do
+        group = steps "Test Steps" do
+          before { raise exception }
+          it { 1.should == 1 }
+          it { 1.should == 1 }
+        end
+        group.run
+      end
+
+      group.examples.each do |example|
+        example.metadata[:execution_result][:status].should == 'failed'
+        example.metadata[:execution_result][:exception].should == exception
+      end
+    end
+
     it "should mark later examples as pending if one fails" do
       group = nil
       sandboxed do

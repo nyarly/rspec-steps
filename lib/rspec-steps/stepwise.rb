@@ -112,6 +112,12 @@ module RSpecStepwise
       suspend_transactional_fixtures do
         whole_list_example.run(instance, reporter)
       end
+
+      unless whole_list_example.exception.nil?
+        RSpec.wants_to_quit = true if fail_fast?
+        fail_filtered_examples(whole_list_example.exception, reporter)
+      end
+
     end
   end
 
