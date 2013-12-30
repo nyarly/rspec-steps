@@ -9,7 +9,13 @@ module Corundum
   end
 
   tk.in_namespace do
-    sanity = GemspecSanity.new(tk)
+    GemspecFiles.new(tk)
+    %w{debug profanity racism ableism sexism issues}.each do |type|
+      QuestionableContent.new(tk) do |qc|
+        qc.type = type
+      end
+    end
+
     rspec = RSpec.new(tk)
     cov = SimpleCov.new(tk, rspec) do |cov|
       cov.threshold = 55
