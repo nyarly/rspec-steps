@@ -55,7 +55,7 @@ module RSpecStepwise
   end
 
   module ClassMethods
-    #TODO: This is hacky and needs a more general solution
+    #This is hacky and needs a more general solution
     #Something like cloning the current conf and having RSpec::Stepwise::config ?
     def suspend_transactional_fixtures
       if self.respond_to? :use_transactional_fixtures
