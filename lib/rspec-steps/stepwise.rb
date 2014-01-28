@@ -107,6 +107,18 @@ module RSpecStepwise
       super
     end
 
+    def example_synonym(named, desc=nil, *args, &block)
+      unless desc.nil?
+        desc = [named, desc].join(" ")
+      end
+      it(desc, *args, &block)
+    end
+
+    def when(*args, &block); example_synonym("when", *args, &block); end
+    def then(*args, &block); example_synonym("then", *args, &block); end
+    def next(*args, &block); example_synonym("next", *args, &block); end
+    def step(*args, &block); example_synonym("step", *args, &block); end
+
     def run_before_step(example)
       RSpec::Core::Hooks::HookCollection.new(ancestors.reverse.map {|a| a.hooks[:before][:step]}.flatten.compact).for(example).run
     end
