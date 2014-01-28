@@ -29,6 +29,55 @@ describe RSpec::Core::ExampleGroup, "defined as stepwise" do
       end
     end
 
+    it "should run each_step hooks" do
+      group = nil
+      afters = []
+      befores = []
+
+      sandboxed do
+        group = steps "Test Each Step" do
+          before :each  do
+            befores << :each
+          end
+          after :each do
+            afters << :each
+          end
+
+          before :all  do
+            befores << :all
+          end
+          after :all do
+            afters << :all
+          end
+
+          before :step  do
+            befores << :step
+          end
+          after :step do
+            afters << :step
+          end
+
+          it "should 1" do
+            1.should == 1
+          end
+          it "should 2" do
+            2.should == 2
+          end
+          it "should 3" do
+            3.should == 3
+          end
+        end
+        group.run
+      end
+
+      befores.find_all{|item| item == :all}.length.should == 1
+      befores.find_all{|item| item == :each}.length.should == 1
+      befores.find_all{|item| item == :step}.length.should == 3
+      afters.find_all{|item| item == :all}.length.should == 1
+      afters.find_all{|item| item == :each}.length.should == 1
+      afters.find_all{|item| item == :step}.length.should == 3
+    end
+
     it "should mark later examples as failed if a before hook fails" do
       group = nil
       exception = Exception.new "Testing Error"

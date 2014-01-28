@@ -44,9 +44,11 @@ module RSpecStepwise
 
   module StepExample
     def run_before_each
+      @example_group_class.run_before_step(self)
     end
 
     def run_after_each
+      @example_group_class.run_after_step(self)
     end
 
     def with_around_hooks
@@ -73,6 +75,12 @@ module RSpecStepwise
     end
 
     def before(*args, &block)
+      if args.first == :step
+        args.shift
+        options = build_metadata_hash_from(args)
+        return ((hooks[:before][:step] ||= []) <<
+                block.extend(RSpec::Core::Hooks::BeforeHookExtension).with(options))
+      end
       if args.first == :each
         puts "before blocks declared for steps are always treated as :all scope"
       end
@@ -80,6 +88,12 @@ module RSpecStepwise
     end
 
     def after(*args, &block)
+      if args.first == :step
+        args.shift
+        options = build_metadata_hash_from(args)
+        hooks[:after][:step] ||= []
+        return (hooks[:after][:step].unshift block.extend(RSpec::Core::Hooks::AfterHookExtension).with(options))
+      end
       if args.first == :each
         puts "after blocks declared for steps are always treated as :all scope"
       end
@@ -91,6 +105,14 @@ module RSpecStepwise
         puts "around :each blocks declared for steps are treated as :all scope"
       end
       super
+    end
+
+    def run_before_step(example)
+      RSpec::Core::Hooks::HookCollection.new(ancestors.reverse.map {|a| a.hooks[:before][:step]}.flatten.compact).for(example).run
+    end
+
+    def run_after_step(example)
+      RSpec::Core::Hooks::HookCollection.new(ancestors.map {|a| a.hooks[:after][:step]}.flatten.compact).for(example).run
     end
 
     def perform_steps(name, *args, &customization_block)
