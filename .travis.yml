@@ -1,2 +1,6 @@
 language: ruby
 script: bundle exec rake ci
+gemfile:
+  - gemfiles/2.6
+  - gemfiles/2.10
+  - gemfiles/2.14
