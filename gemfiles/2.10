@@ -2,4 +2,4 @@ source "https://rubygems.org"
 
 gem "rspec", "~> 2.10.0"
 
-gemspec, :path => "../rspec-steps.gemspec"
+gemspec :path => "../rspec-steps.gemspec"
