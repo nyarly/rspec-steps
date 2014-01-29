@@ -24,7 +24,9 @@ describe RSpec::Core::ExampleGroup, "defined as stepwise" do
         group.run
       end
 
+      require 'pp'
       group.examples.each do |example|
+        puts "\n#{__FILE__}:#{__LINE__} => #{example.metadata.pretty_inspect}"
         example.metadata[:execution_result][:status].should == 'passed'
       end
     end

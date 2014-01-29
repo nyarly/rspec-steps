@@ -19,6 +19,8 @@ def sandboxed(&block)
 
   object = Object.new
   object.extend(RSpec::Core::SharedExampleGroup)
+  object.extend(RSpec::Steps::DSL)
+  object.extend(RSpec::Core::DSL)
 
   (class << RSpec::Core::ExampleGroup; self; end).class_eval do
     alias_method :orig_run, :run
@@ -42,47 +44,3 @@ ensure
   RSpec.instance_variable_set(:@configuration, @orig_config)
   RSpec.instance_variable_set(:@world, @orig_world)
 end
-
-#Original from rspec-core
-=begin
-class << RSpec
-  alias_method :original_warn_about_deprecated_configure, :warn_about_deprecated_configure
-
-  def warn_about_deprecated_configure
-    # no-op: in our specs we don't want to see the warning.
-  end
-
-  alias_method :null_warn_about_deprecated_configure, :warn_about_deprecated_configure
-
-  def allowing_configure_warning
-    (class << self; self; end).class_eval do
-      alias_method :warn_about_deprecated_configure, :original_warn_about_deprecated_configure
-      begin
-        yield
-      ensure
-        alias_method :warn_about_deprecated_configure, :null_warn_about_deprecated_configure
-      end
-    end
-  end
-end
-
-RSpec.configure do |c|
-  c.color_enabled = !in_editor?
-  c.filter_run :focus => true
-  c.run_all_when_everything_filtered = true
-  c.filter_run_excluding :ruby => lambda {|version|
-    case version.to_s
-    when "!jruby"
-      RUBY_ENGINE == "jruby"
-    when /^> (.*)/
-      !(RUBY_VERSION.to_s > $1)
-    else
-      !(RUBY_VERSION.to_s =~ /^#{version.to_s}/)
-    end
-  }
-  c.around do |example|
-    sandboxed { example.run }
-  end
-end
-=begin
-=end

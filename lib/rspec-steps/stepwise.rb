@@ -45,6 +45,8 @@ module RSpecStepwise
   module StepExample
     def run_before_each
       @example_group_class.run_before_step(self)
+    rescue Object => ex
+      puts "\n#{__FILE__}:#{__LINE__} => #{[ex, ex.backtrace].pretty_inspect}"
     end
 
     def run_after_each
@@ -74,12 +76,27 @@ module RSpecStepwise
       end
     end
 
+    def build_before_hook(options, &block)
+      if defined? RSpec::Core::Hooks::BeforeHookExtension
+        block.extend(RSpec::Core::Hooks::BeforeHookExtension).with(options)
+      else
+        RSpec::Core::Hooks::BeforeHook.new(block, options)
+      end
+    end
+
+    def build_after_hook(options, &block)
+      if defined? RSpec::Core::Hooks::AfterHookExtension
+        block.extend(RSpec::Core::Hooks::AfterHookExtension).with(options)
+      else
+        RSpec::Core::Hooks::AfterHook.new(block, options)
+      end
+    end
+
     def before(*args, &block)
       if args.first == :step
         args.shift
         options = build_metadata_hash_from(args)
-        return ((hooks[:before][:step] ||= []) <<
-                block.extend(RSpec::Core::Hooks::BeforeHookExtension).with(options))
+        return ((hooks[:before][:step] ||= []) << build_before_hook(options, &block))
       end
       if args.first == :each
         puts "before blocks declared for steps are always treated as :all scope"
@@ -92,7 +109,7 @@ module RSpecStepwise
         args.shift
         options = build_metadata_hash_from(args)
         hooks[:after][:step] ||= []
-        return (hooks[:after][:step].unshift block.extend(RSpec::Core::Hooks::AfterHookExtension).with(options))
+        return (hooks[:after][:step].unshift build_after_hook(options, &block))
       end
       if args.first == :each
         puts "after blocks declared for steps are always treated as :all scope"
@@ -119,12 +136,28 @@ module RSpecStepwise
     def next(*args, &block); example_synonym("next", *args, &block); end
     def step(*args, &block); example_synonym("step", *args, &block); end
 
+    def run_step(example, hook, &sorting)
+      groups = if respond_to?(:parent_groups)
+                        parent_groups
+                      else
+                        ancestors
+                      end
+
+      if block_given?
+        groups = yield groups
+      end
+
+      RSpec::Core::Hooks::HookCollection.new(groups.map {|a| a.hooks[hook][:step]}.flatten.compact).for(example).run
+    end
+
     def run_before_step(example)
-      RSpec::Core::Hooks::HookCollection.new(ancestors.reverse.map {|a| a.hooks[:before][:step]}.flatten.compact).for(example).run
+      run_step(example, :before)
     end
 
     def run_after_step(example)
-      RSpec::Core::Hooks::HookCollection.new(ancestors.map {|a| a.hooks[:after][:step]}.flatten.compact).for(example).run
+      run_step(example, :after) do |groups|
+        groups.reverse
+      end
     end
 
     def perform_steps(name, *args, &customization_block)

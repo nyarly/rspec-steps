@@ -2,7 +2,7 @@ require 'rspec/core'
 require 'rspec-steps/stepwise'
 
 module RSpec::Steps
-  module ClassMethods
+  module DSL
     def steps(*args, &block)
       options =
         if args.last.is_a?(Hash)
@@ -19,7 +19,9 @@ module RSpec::Steps
   end
 end
 
-RSpec::Core::ExampleGroup.extend RSpec::Steps::ClassMethods
-include RSpec::Steps::ClassMethods
+RSpec::Core::ExampleGroup.extend RSpec::Steps::DSL
+
+extend RSpec::Steps::DSL
+Module::send(:include, RSpec::Steps::DSL)
 
 RSpec::configuration.include(RSpecStepwise, :stepwise => true)
