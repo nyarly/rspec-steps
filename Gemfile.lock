@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rspec-steps (0.2.0)
+    rspec-steps (0.3.0)
       rspec (>= 2.6, < 2.99)
 
 GEM
@@ -70,6 +70,4 @@ PLATFORMS
 DEPENDENCIES
   corundum (>= 0.0.25)
   fuubar
-  rspec (~> 2.14.0)
   rspec-steps!
-  tilt (< 2.0)
