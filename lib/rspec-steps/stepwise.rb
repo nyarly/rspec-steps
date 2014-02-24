@@ -161,7 +161,12 @@ module RSpecStepwise
     end
 
     def perform_steps(name, *args, &customization_block)
-      shared_block = world.shared_example_groups[name]
+      shared_block = nil
+      if world.respond_to? :shared_example_groups
+        shared_block = world.shared_example_groups[name]
+      else
+        shared_block = shared_example_groups[name]
+      end
       raise "Could not find shared example group named #{name.inspect}" unless shared_block
 
       module_eval_with_args(*args, &shared_block)

@@ -29,6 +29,27 @@ describe RSpec::Core::ExampleGroup, "defined as stepwise" do
       end
     end
 
+    it "should work with shared_steps/perform steps" do
+      group = nil
+      sandboxed do
+        group = steps "Test Steps" do
+          shared_steps "add one" do
+            it("adds one to @a"){ @a += 1 }
+          end
+          it("sets @a"){ @a = 1 }
+          perform_steps "add one"
+          perform_steps "add one"
+          perform_steps "add one"
+          it("reads @a"){ @a.should == 4 }
+        end
+        group.run
+      end
+
+      group.examples.each do |example|
+        example.metadata[:execution_result][:status].should == 'passed'
+      end
+    end
+
     it "should run each_step hooks" do
       group = nil
       afters = []
