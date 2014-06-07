@@ -181,7 +181,7 @@ module RSpecStepwise
       instance.example = whole_list_example
       instance.reporter = reporter
 
-      suspend_transactional_fixtures do
+      result = suspend_transactional_fixtures do
         whole_list_example.run(instance, reporter)
       end
 
@@ -190,6 +190,7 @@ module RSpecStepwise
         fail_filtered_examples(whole_list_example.exception, reporter)
       end
 
+      result
     end
   end
 
