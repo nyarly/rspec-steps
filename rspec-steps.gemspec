@@ -70,7 +70,7 @@ Gem::Specification.new do |spec|
   spec.rdoc_options	+= %w{--main doc/README }
   spec.rdoc_options	+= ["--title", "#{spec.name}-#{spec.version} RDoc"]
 
-  spec.add_dependency("rspec", ">= 2.6", "< 2.99")
+  spec.add_dependency("rspec", ">= 2.6", "< 3.99")
 
   spec.post_install_message = "Another tidy package brought to you by Judson Lester of Logical Reality Design"
 end
