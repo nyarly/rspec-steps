@@ -4,6 +4,7 @@ gemfile:
   - gemfiles/2.6
   - gemfiles/2.10
   - gemfiles/2.14
+  - gemfiles/3.0
 rvm:
   - "1.9.3"
   - "2.0.0"
