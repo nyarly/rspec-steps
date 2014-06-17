@@ -1,11 +1,16 @@
 language: ruby
 script: bundle exec rake ci
+install: .travis-support/cached-bundle install
 gemfile:
-  - gemfiles/2.6
-  - gemfiles/2.10
-  - gemfiles/2.14
-  - gemfiles/3.0
+- gemfiles/2.6
+- gemfiles/2.10
+- gemfiles/2.14
+- gemfiles/3.0
 rvm:
-  - "1.9.3"
-  - "2.0.0"
-  - "2.1.0"
+- 1.9.3
+- 2.0.0
+- 2.1.0
+env:
+  global:
+  - AMAZON_S3_BUCKET: lrd-travis-caching
+  - secure: FNjEW8P99C8cwdhw80iNa1nauVrKVpvOzp5Sr0yiwpfx6lDC5/E53fSQoBkd4a4nb8L7CdyJ5O/ynarb/xA11GNFQ/URqjyV1cHTaZGWqgX75nMheVL4RKrWu72y3rl8G/EQvEelmDc/0LHhE9zOq/OuZZkB4z+pjFMEwNZDbS4=
