@@ -1,6 +1,6 @@
 language: ruby
 script: bundle exec rake ci
-install: .travis-support/cached-bundle install
+install: .travis-support/cached-bundle install --deployment
 gemfile:
 - gemfiles/2.6
 - gemfiles/2.10
