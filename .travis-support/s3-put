@@ -60,7 +60,9 @@ date="$(date_string)"
 
 url="https://$bucket.s3.amazonaws.com/$remote_path"
 
-curl -qsSf -T "$file" \
+echo "Uploading $file to S3 bucket $bucket/$remote_path with ${AMAZON_ACCESS_KEY_ID}"
+
+curl -qSf -T "$file" \
   -H "Authorization: $(authorization)" \
   -H "x-amz-acl: $acl" \
   -H "Date: $date" \

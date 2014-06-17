@@ -43,7 +43,7 @@ bundle "$@"
 
 if [ ! -f "$cache_name" ]; then
   echo "Caching \`${bundle_path}' to S3"
-  echo "CUSTOM_BUNDLE_PATH=${CUSTOM_BUNDLE_PATH}"
   tar czf "$cache_name" "$bundle_path"
+  echo "Putting $cache_name to ${AMAZON_S3_BUCKET}:${TRAVIS_REPO_SLUG}/${cache_name}"
   .travis-support/s3-put "$cache_name" "${AMAZON_S3_BUCKET}:${TRAVIS_REPO_SLUG}/${cache_name}"
 fi
