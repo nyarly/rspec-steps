@@ -13,4 +13,5 @@ rvm:
 env:
   global:
   - AMAZON_S3_BUCKET: lrd-travis-caching
-  - secure: FNjEW8P99C8cwdhw80iNa1nauVrKVpvOzp5Sr0yiwpfx6lDC5/E53fSQoBkd4a4nb8L7CdyJ5O/ynarb/xA11GNFQ/URqjyV1cHTaZGWqgX75nMheVL4RKrWu72y3rl8G/EQvEelmDc/0LHhE9zOq/OuZZkB4z+pjFMEwNZDbS4=
+  - secure: b+5Ei+klIudmG+mWu2y6EgHZ/1GxOYX65jGskmQm85lahFUn9jVUn4IhDbERTmBGjjovZvAZ1cIzZg7hhOH2WRcWJX5My13KZv3hurz2jWeziIQp2LtURi7Ghah/1py+82oFTTQe/18A+ONGN7tksqAlWen/UOmfZzXpNPnyF9s=
+  - secure: FxV30BIED4dP/GkBGF8gtoWirzDzT0Gzn0GxocREp0BZAY9ti5YYoDQixPVCvtQCIKPUjUHnNd8KXdn0HtUhlgLhg7lEE03MoupsXoMZk8gNBeffcCRkzrpVBTmLEhdnoV3UNKpfn2+qCUSqqJimTarDe6k/7F5FzOl3R+xJgxw=
