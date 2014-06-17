@@ -36,7 +36,6 @@ string_to_sign() {
   echo "$content_md5"
   echo "$content_type"
   echo "$date"
-  echo "x-amz-acl:$acl"
   printf "/$bucket/$remote_path"
 }
 
@@ -47,7 +46,7 @@ date_string() {
 file="$1"
 bucket="${2%%:*}"
 remote_path="${2#*:}"
-content_type="$3"
+content_type="${3:-binary/octet-stream}"
 
 if [ -z "$remote_path" ] || [ "$remote_path" = "$bucket" ]; then
   remote_path="${file##*/}"
@@ -64,7 +63,6 @@ echo "Uploading $file to S3 bucket $bucket/$remote_path with ${AMAZON_ACCESS_KEY
 
 curl -qSf -T "$file" \
   -H "Authorization: $(authorization)" \
-  -H "x-amz-acl: $acl" \
   -H "Date: $date" \
   -H "Content-MD5: $content_md5" \
   -H "Content-Type: $content_type" \

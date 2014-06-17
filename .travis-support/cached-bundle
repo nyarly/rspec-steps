@@ -16,7 +16,6 @@
 #
 # Author: Mislav Marohnić
 
-env
 set -e
 
 compute_md5() {
@@ -28,7 +27,6 @@ download() {
   curl --tcp-nodelay -qsfL "$1" -o "$2"
 }
 
-echo $CUSTOM_BUNDLE_PATH
 bundle_path=${CUSTOM_BUNDLE_PATH:-vendor/bundle}
 gemfile_hash="$(compute_md5 <"${BUNDLE_GEMFILE:-Gemfile}.lock")"
 cache_name="${TRAVIS_RUBY_VERSION}-${gemfile_hash}.tgz"
