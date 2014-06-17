@@ -27,7 +27,7 @@ download() {
   curl --tcp-nodelay -qsfL "$1" -o "$2"
 }
 
-bundle_path=${BUNDLE_PATH:-"vendor/bundle"}
+bundle_path=${BUNDLE_PATH:-vendor/bundle}
 gemfile_hash="$(compute_md5 <"${BUNDLE_GEMFILE:-Gemfile}.lock")"
 cache_name="${TRAVIS_RUBY_VERSION}-${gemfile_hash}.tgz"
 fetch_url="http://${AMAZON_S3_BUCKET}.s3.amazonaws.com/${TRAVIS_REPO_SLUG}/${cache_name}"
@@ -41,7 +41,7 @@ bundle "$@"
 
 if [ ! -f "$cache_name" ]; then
   echo "Caching \`${bundle_path}' to S3"
-  ls -R *
+  echo "BUNDLE_PATH=${BUNDLE_PATH}"
   tar czf "$cache_name" "$bundle_path"
   .travis-support/s3-put "$cache_name" "${AMAZON_S3_BUCKET}:${TRAVIS_REPO_SLUG}/${cache_name}"
 fi
