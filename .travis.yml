@@ -5,16 +5,42 @@ matrix:
   include:
     - gemfile: gemfiles/2.6
       env: TARGET_RSPEC=2
+      rvm: 1.9.3
     - gemfile: gemfiles/2.10
       env: TARGET_RSPEC=2
+      rvm: 1.9.3
     - gemfile: gemfiles/2.14
       env: TARGET_RSPEC=2
+      rvm: 1.9.3
     - gemfile: gemfiles/3.0
       env: TARGET_RSPEC=3
-rvm:
-- 1.9.3
-- 2.0.0
-- 2.1.0
+      rvm: 1.9.3
+
+    - gemfile: gemfiles/2.6
+      env: TARGET_RSPEC=2
+      rvm: 2.0.0
+    - gemfile: gemfiles/2.10
+      env: TARGET_RSPEC=2
+      rvm: 2.0.0
+    - gemfile: gemfiles/2.14
+      env: TARGET_RSPEC=2
+      rvm: 2.0.0
+    - gemfile: gemfiles/3.0
+      env: TARGET_RSPEC=3
+      rvm: 2.0.0
+
+    - gemfile: gemfiles/2.6
+      env: TARGET_RSPEC=2
+      rvm: 2.1.0
+    - gemfile: gemfiles/2.10
+      env: TARGET_RSPEC=2
+      rvm: 2.1.0
+    - gemfile: gemfiles/2.14
+      env: TARGET_RSPEC=2
+      rvm: 2.1.0
+    - gemfile: gemfiles/3.0
+      env: TARGET_RSPEC=3
+      rvm: 2.1.0
 env:
   global:
   - CUSTOM_BUNDLE_PATH=gemfiles/vendor/bundle AMAZON_S3_BUCKET=lrd-travis-caching
