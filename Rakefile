@@ -17,7 +17,7 @@ module Corundum
     end
 
     rspec = RSpec.new(tk) do |rspec|
-      if ENV["TARGET_RSPEC"]="3"
+      if ENV["TARGET_RSPEC"]=="3"
         rspec.rspec_opts << "-O rspec3.conf"
         rspec.files_to_run = "spec3"
       else
