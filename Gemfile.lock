@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     rspec-steps (0.4.1)
-      rspec (>= 2.6, < 2.99)
+      rspec (>= 2.6, < 3.99)
 
 GEM
   remote: https://rubygems.org/

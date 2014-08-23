@@ -3,6 +3,8 @@ require 'rspec-steps/stepwise'
 require 'rspec/core/shared_example_group'
 
 module RSpec::Core::SharedExampleGroup
-  alias :shared_steps :share_examples_for
-  alias :steps_shared_as :share_as
+  alias shared_steps shared_examples_for
+  if respond_to? :share_as
+    alias steps_shared_as share_as
+  end
 end

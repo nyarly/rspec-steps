@@ -1,5 +1,12 @@
 module RSpecStepwise
   class ApatheticReporter < ::RSpec::Core::Reporter
+    def initialize
+      @examples = []
+      @failed_examples = []
+      @pending_examples = []
+      @duration = @start = @load_time = nil
+    end
+
     def notify(*args)
       #noop
     end
@@ -22,10 +29,15 @@ module RSpecStepwise
 
     def build_example_block
       #variables of concern: reporter, instance
+      reporter = @reporter
       @example_block = proc do
         begin
           self.class.filtered_examples.inject(true) do |success, example|
-            break if RSpec.wants_to_quit
+            if RSpec.respond_to? :wants_to_quit
+              break if RSpec.wants_to_quit
+            else
+              break if RSpec.world.wants_to_quit
+            end
             example.extend StepExample
             unless success
               example.metadata[:pending] = true
@@ -34,7 +46,13 @@ module RSpecStepwise
             succeeded = with_indelible_ivars do
               example.run(self, reporter)
             end
-            RSpec.wants_to_quit = true if self.class.fail_fast? && !succeeded
+            if self.class.fail_fast? && !succeeded
+              if RSpec.respond_to? :wants_to_quit=
+                RSpec.wants_to_quit = true
+              else
+                RSpec.world.wants_to_quit = true
+              end
+            end
             success && succeeded
           end
         end
@@ -48,10 +66,12 @@ module RSpecStepwise
     rescue Object => ex
       puts "\n#{__FILE__}:#{__LINE__} => #{[ex, ex.backtrace].pretty_inspect}"
     end
+    alias run_before_example run_before_each
 
     def run_after_each
       @example_group_class.run_after_step(self)
     end
+    alias run_after_example run_after_each
 
     def with_around_hooks
       yield
@@ -92,10 +112,18 @@ module RSpecStepwise
       end
     end
 
+    def _metadata_from_args(args)
+      if RSpec::Core::Metadata.respond_to?(:build_hash_from)
+        RSpec::Core::Metadata.build_hash_from(args)
+      else
+        build_metadata_hash_from(args)
+      end
+    end
+
     def before(*args, &block)
       if args.first == :step
         args.shift
-        options = build_metadata_hash_from(args)
+        options = _metadata_from_args(args)
         return ((hooks[:before][:step] ||= []) << build_before_hook(options, &block))
       end
       if args.first == :each
@@ -107,7 +135,7 @@ module RSpecStepwise
     def after(*args, &block)
       if args.first == :step
         args.shift
-        options = build_metadata_hash_from(args)
+        options = _metadata_from_args(args)
         hooks[:after][:step] ||= []
         return (hooks[:after][:step].unshift build_after_hook(options, &block))
       end
@@ -162,32 +190,56 @@ module RSpecStepwise
 
     def perform_steps(name, *args, &customization_block)
       shared_block = nil
-      if world.respond_to? :shared_example_groups
+      if respond_to?(:world) and world.respond_to? :shared_example_groups
         shared_block = world.shared_example_groups[name]
       else
-        shared_block = shared_example_groups[name]
+        if respond_to?(:shared_example_groups)
+          shared_block = shared_example_groups[name]
+        else
+          shared_block = RSpec.world.shared_example_group_registry.find(parent_groups, name)
+        end
       end
       raise "Could not find shared example group named #{name.inspect}" unless shared_block
 
-      module_eval_with_args(*args, &shared_block)
-      module_eval(&customization_block) if customization_block
+      if respond_to? :module_exec
+        module_exec(*args, &shared_block)
+        module_exec(&customization_block) if customization_block
+      else
+        module_eval_with_args(*args, &shared_block)
+        module_eval(&customization_block) if customization_block
+      end
     end
 
     def run_examples(reporter)
       whole_list_example = WholeListExample.new(self, "step list", {})
 
       instance = new
-      set_ivars(instance, before_all_ivars)
-      instance.example = whole_list_example
-      instance.reporter = reporter
+      if respond_to? :before_context_ivars
+        set_ivars(instance, before_context_ivars)
+      else
+        set_ivars(instance, before_all_ivars)
+      end
+      instance.example = whole_list_example if respond_to? :example=
+      instance.reporter = reporter if respond_to? :reporter=
 
       result = suspend_transactional_fixtures do
         whole_list_example.run(instance, reporter)
       end
 
       unless whole_list_example.exception.nil?
-        RSpec.wants_to_quit = true if fail_fast?
-        fail_filtered_examples(whole_list_example.exception, reporter)
+        if fail_fast?
+          if RSpec.respond_to? :wants_to_quit=
+            RSpec.wants_to_quit = true
+          else
+            RSpec.world.wants_to_quit = true
+          end
+        end
+        if respond_to? :fail_filtered_examples
+          fail_filtered_examples(whole_list_example.exception, reporter)
+        else
+          ex = whole_list_example.exception
+          for_filtered_examples(reporter) {|example| example.fail_with_exception(reporter, ex) }
+        end
       end
 
       result
