@@ -9,7 +9,7 @@ describe RSpec::Core::ExampleGroup do
         group = RSpec.steps "Test Steps" do
         end
       end
-      (class << group; self; end).included_modules.should include(RSpecStepwise::ClassMethods)
+      expect((class << group; self; end).included_modules).to include(RSpecStepwise::ClassMethods)
     end
   end
 
@@ -25,7 +25,7 @@ describe RSpec::Core::ExampleGroup do
       end
 
       group.examples.each do |example|
-        example.metadata[:execution_result][:status].should == 'passed'
+        expect(example.metadata[:execution_result].status).to eq(:passed)
       end
     end
 
@@ -46,7 +46,7 @@ describe RSpec::Core::ExampleGroup do
       end
 
       group.examples.each do |example|
-        example.metadata[:execution_result][:status].should == 'passed'
+        expect(example.metadata[:execution_result].status).to eq(:passed)
       end
     end
 
@@ -91,12 +91,12 @@ describe RSpec::Core::ExampleGroup do
         group.run
       end
 
-      befores.find_all{|item| item == :all}.length.should == 1
-      befores.find_all{|item| item == :each}.length.should == 1
-      befores.find_all{|item| item == :step}.length.should == 3
-      afters.find_all{|item| item == :all}.length.should == 1
-      afters.find_all{|item| item == :each}.length.should == 1
-      afters.find_all{|item| item == :step}.length.should == 3
+      expect(befores.find_all{|item| item == :all}.length).to eq(1)
+      expect(befores.find_all{|item| item == :each}.length).to eq(1)
+      expect(befores.find_all{|item| item == :step}.length).to eq(3)
+      expect(afters.find_all{|item| item == :all}.length).to eq(1)
+      expect(afters.find_all{|item| item == :each}.length).to eq(1)
+      expect(afters.find_all{|item| item == :step}.length).to eq(3)
     end
 
     it "should mark later examples as failed if a before hook fails" do
@@ -113,8 +113,8 @@ describe RSpec::Core::ExampleGroup do
       end
 
       group.examples.each do |example|
-        example.metadata[:execution_result][:status].should == 'failed'
-        example.metadata[:execution_result][:exception].should == exception
+        expect(example.metadata[:execution_result].status).to eq(:failed)
+        expect(example.metadata[:execution_result].exception).to eq(exception)
       end
     end
 
@@ -128,7 +128,7 @@ describe RSpec::Core::ExampleGroup do
         group.run
       end
 
-      group.examples[1].metadata[:pending].should == true
+      expect(group.examples[1].metadata[:pending]).to eq(true)
     end
 
     it "should allow nested steps", :pending => "Not really" do
@@ -144,9 +144,9 @@ describe RSpec::Core::ExampleGroup do
       end
 
       group.children[0].examples.each do |example|
-        example.metadata[:execution_result][:status].should == 'passed'
+        expect(example.metadata[:execution_result].status).to eq(:passed)
       end
-      group.children[0].should have(2).examples
+      expect(group.children[0].size).to eq(2)
     end
 
     it "should not allow nested normal contexts" do
