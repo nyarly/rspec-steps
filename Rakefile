@@ -16,7 +16,15 @@ module Corundum
       end
     end
 
-    rspec = RSpec.new(tk)
+    rspec = RSpec.new(tk) do |rspec|
+      if ENV[TARGET_RSPEC]="3"
+        rspec.rspec_opts << "-O rspec3.conf"
+        rspec.files_to_run = "spec3"
+      else
+        rspec.rspec_opts << "-O rspec2.conf"
+        rspec.files_to_run = "spec2"
+      end
+    end
     cov = SimpleCov.new(tk, rspec) do |cov|
       cov.threshold = 80
     end
