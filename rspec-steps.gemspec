@@ -49,7 +49,8 @@ Gem::Specification.new do |spec|
   spec.rubygems_version = "1.3.5"
 
   dev_deps = [
-    ["corundum", "0.4.0"],
+    ["corundum", ">= 0.4.0"],
+    ["metric_fu", "~> 4.11.1"],
   ]
   if spec.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
