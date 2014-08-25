@@ -1,11 +1,13 @@
 require 'corundum/tasklibs'
-require 'mattock/yard_extensions'
+#require 'mattock/yard_extensions'
 
 module Corundum
   register_project(__FILE__)
 
   tk = Toolkit.new do |tk|
     tk.file_lists.project = [__FILE__]
+    tk.file_lists.test << FileList["spec2/**/*.rb"]
+    tk.file_lists.test << FileList["spec3/**/*.rb"]
   end
 
   tk.in_namespace do
@@ -26,19 +28,13 @@ module Corundum
       end
     end
     cov = SimpleCov.new(tk, rspec) do |cov|
-      cov.threshold = 80
+      cov.threshold = 75
     end
     gem = GemBuilding.new(tk)
     cutter = GemCutter.new(tk,gem)
-    email = Email.new(tk)
     vc = Git.new(tk) do |vc|
       vc.branch = "master"
     end
-    task tk.finished_files.build => vc["is_checked_in"]
-    yd = YARDoc.new(tk) do |yd|
-    end
-    all_docs = DocumentationAssembly.new(tk, yd, rspec, cov)
-    pages = GithubPages.new(all_docs)
   end
 end
 

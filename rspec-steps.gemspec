@@ -29,21 +29,27 @@ Gem::Specification.new do |spec|
   lib/rspec-steps/duckpunch/object-extensions.rb
   doc/README
   doc/Specifications
-  spec/example_group_spec.rb
+  spec2/example_group_spec.rb
+  spec3/example_group_spec.rb
   spec_help/spec_helper.rb
   spec_help/gem_test_suite.rb
   spec_help/rspec-sandbox.rb
   spec_help/ungemmer.rb
   spec_help/file-sandbox.rb
+  spec3_help/spec_helper.rb
+  spec3_help/gem_test_suite.rb
+  spec3_help/rspec-sandbox.rb
+  spec3_help/ungemmer.rb
+  spec3_help/file-sandbox.rb
   ]
 
-  spec.test_file        = "spec_help/gem_test_suite.rb"
+  spec.test_file        = "spec3_help/gem_test_suite.rb"
   spec.licenses = ["MIT"]
   spec.require_paths = %w[lib/]
   spec.rubygems_version = "1.3.5"
 
   dev_deps = [
-    ["corundum", ">= 0.0.25"],
+    ["corundum", "0.4.0"],
   ]
   if spec.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
