@@ -3,3 +3,4 @@
 -I ./spec_help
 --require spec_helper
 --pattern *.rb
+--color

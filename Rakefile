@@ -1,13 +1,11 @@
 require 'corundum/tasklibs'
-#require 'mattock/yard_extensions'
 
 module Corundum
   register_project(__FILE__)
 
   tk = Toolkit.new do |tk|
     tk.file_lists.project = [__FILE__]
-    tk.file_lists.test << FileList["spec2/**/*.rb"]
-    tk.file_lists.test << FileList["spec3/**/*.rb"]
+    tk.file_lists.test << FileList["spec/**/*.rb"]
   end
 
   tk.in_namespace do
@@ -19,23 +17,29 @@ module Corundum
     end
 
     rspec = RSpec.new(tk) do |rspec|
-      if ENV["TARGET_RSPEC"]=="3"
-        rspec.rspec_opts << "-O rspec3.conf"
-        rspec.files_to_run = "spec3"
-      else
-        rspec.rspec_opts << "-O rspec2.conf"
-        rspec.files_to_run = "spec2"
-      end
+      rspec.files_to_run = "spec"
     end
-    cov = SimpleCov.new(tk, rspec) do |cov|
+    SimpleCov.new(tk, rspec) do |cov|
       cov.threshold = 75
     end
     gem = GemBuilding.new(tk)
-    cutter = GemCutter.new(tk,gem)
-    vc = Git.new(tk) do |vc|
+    GemCutter.new(tk,gem)
+    Git.new(tk) do |vc|
       vc.branch = "master"
     end
   end
+end
+
+Dir['gemfiles/*'].delete_if{|path| path =~ /lock\z/ }.each do |gemfile|
+  gemfile_lock = gemfile + ".lock"
+  file gemfile_lock => [gemfile, "rspec-steps.gemspec"] do
+    Bundler.with_clean_env do
+      sh "bundle install --gemfile #{gemfile}"
+    end
+  end
+
+  desc "Update all the bundler lockfiles for Travis"
+  task :travis_gemfiles => gemfile_lock
 end
 
 task :default => [:release, :publish_docs]

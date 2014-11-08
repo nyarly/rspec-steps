@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name		= "rspec-steps"
-  spec.version		= "0.4.1"
+  spec.version		= "0.5.0"
   author_list = {
     "Judson Lester" => "judson@lrdesign.com",
     "Evan Dorn" => "evan@lrdesign.com"
@@ -29,21 +29,15 @@ Gem::Specification.new do |spec|
   lib/rspec-steps/duckpunch/object-extensions.rb
   doc/README
   doc/Specifications
-  spec2/example_group_spec.rb
-  spec3/example_group_spec.rb
+  spec/example_group_spec.rb
   spec_help/spec_helper.rb
   spec_help/gem_test_suite.rb
   spec_help/rspec-sandbox.rb
   spec_help/ungemmer.rb
   spec_help/file-sandbox.rb
-  spec3_help/spec_helper.rb
-  spec3_help/gem_test_suite.rb
-  spec3_help/rspec-sandbox.rb
-  spec3_help/ungemmer.rb
-  spec3_help/file-sandbox.rb
   ]
 
-  spec.test_file        = "spec3_help/gem_test_suite.rb"
+  spec.test_file        = "spec_help/gem_test_suite.rb"
   spec.licenses = ["MIT"]
   spec.require_paths = %w[lib/]
   spec.rubygems_version = "1.3.5"
@@ -77,7 +71,7 @@ Gem::Specification.new do |spec|
   spec.rdoc_options	+= %w{--main doc/README }
   spec.rdoc_options	+= ["--title", "#{spec.name}-#{spec.version} RDoc"]
 
-  spec.add_dependency("rspec", ">= 2.6", "< 3.99")
+  spec.add_dependency("rspec", ">= 3.0", "< 3.99")
 
   spec.post_install_message = "Another tidy package brought to you by Judson Lester of Logical Reality Design"
 end

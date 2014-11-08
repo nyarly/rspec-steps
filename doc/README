@@ -6,6 +6,10 @@ in sequence and which stop when a step fails.  It's often incredibly
 useful to be able to aseemble a series of tests that should all pass,
 but where completely isolating them is less than sensible.
 
+( RSpec Steps has gone on with the tide of progress - it only supports RSpec
+3.x. If you need Rspec 2 suport, check out two-step:
+https://github.com/LRDesign/two-step )
+
 One excellent example is web site integration tests.  With RSpec steps you can
 do:
 
@@ -106,11 +110,10 @@ diverge, you can DRY your code out with shared_steps blocks, like so:
 
 ## Versions and Dependencies
 
-0.1.0: Released Mar 12, 2013.
-       Compatible with RSpec 2.10-2.13 - probably works with earlier versions
+The goal (sadly unfulfilled) is to try to be compatible with as many versions
+of RSpec 3.x as possible. Frankly, Rspec-Steps is more than a little bit of a
+hack, and intrudes wholesale on RSpec's private interfaces.
 
-0.0.9: Released Feb 22, 2013.
-        NOTES: works with rspec 2.6 through 2.10.  Does not work with rspec >= 2.11
-
-0.0.8: Released Jan 11, 2012.
-        NOTES: Will not work with rspec > 2.9.
+We make good use of Travis to check compatibility, however. You can check what
+versions of RSpec and Ruby RSpec-Steps works with here:
+https://travis-ci.org/LRDesign/rspec-steps
