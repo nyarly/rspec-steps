@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   lib/rspec-steps/stepwise.rb
   lib/rspec-steps/duckpunch/example-group.rb
   lib/rspec-steps/duckpunch/example.rb
+  lib/rspec-steps/duckpunch/hooks.rb
   lib/rspec-steps/duckpunch/object-extensions.rb
   doc/README
   doc/Specifications
