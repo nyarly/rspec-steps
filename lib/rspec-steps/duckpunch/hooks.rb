@@ -1,5 +1,7 @@
 require 'rspec/core/hooks'
 
 module RSpec::Core::Hooks
-  SCOPES << :step
+  class HookCollections
+    SCOPES << :step
+  end
 end
