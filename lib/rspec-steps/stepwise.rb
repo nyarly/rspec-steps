@@ -7,15 +7,16 @@ module RSpecStepwise
       @duration = @start = @load_time = nil
     end
 
-    def notify(*args)
+    #def notify(*args)
       #noop
-    end
+    #end
   end
 
   class WholeListExample < RSpec::Core::Example
-    def initialize(example_group_class, descriptions, metadata)
-      super
-      @reporter = ApatheticReporter.new
+    def initialize(example_group_class, reporter, descriptions, metadata)
+      super(example_group_class, descriptions, metadata)
+      #@reporter = ApatheticReporter.new
+      @reporter = reporter
       build_example_block
     end
 
@@ -40,13 +41,15 @@ module RSpecStepwise
             end
             example.extend StepExample
             unless success
-              example.metadata[:pending] = true
-              exec_result = example.metadata[:execution_result]
-              if exec_result.respond_to? :pending_message=
-                exec_result.pending_message = "Previous step failed"
-              else
-                exec_result[:pending_message] = "Previous step failed"
-              end
+              example.metadata[:skip] = "Previous step failed"
+              RSpec::Core::Pending.mark_pending!(example, example.skip)
+#              example.metadata[:pending] = true
+#              exec_result = example.metadata[:execution_result]
+#              if exec_result.respond_to? :pending_message=
+#                exec_result.pending_message = "Previous step failed"
+#              else
+#                exec_result[:pending_message] = "Previous step failed"
+#              end
             end
             succeeded = with_indelible_ivars do
               example.run(self, reporter)
@@ -216,7 +219,7 @@ module RSpecStepwise
     end
 
     def run_examples(reporter)
-      whole_list_example = WholeListExample.new(self, "step list", {})
+      whole_list_example = WholeListExample.new(self, reporter, "step list", {})
 
       instance = new
       if respond_to? :before_context_ivars

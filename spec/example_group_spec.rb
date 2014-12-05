@@ -45,6 +45,8 @@ describe RSpec::Core::ExampleGroup do
         group.run
       end
 
+      expect(group.examples.length).to eq(5)
+
       group.examples.each do |example|
         expect(example.metadata[:execution_result].status).to eq(:passed)
       end
@@ -128,7 +130,8 @@ describe RSpec::Core::ExampleGroup do
         group.run
       end
 
-      expect(group.examples[1].metadata[:pending]).to eq(true)
+      expect(group.examples[0].metadata[:execution_result].status).to eq(:failed)
+      expect(group.examples[1].metadata[:execution_result].status).to eq(:pending)
     end
 
     it "should allow nested steps", :pending => "Not really" do
