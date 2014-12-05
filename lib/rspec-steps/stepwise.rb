@@ -41,7 +41,12 @@ module RSpecStepwise
             example.extend StepExample
             unless success
               example.metadata[:pending] = true
-              example.metadata[:execution_result][:pending_message] = "Previous step failed"
+              exec_result = example.metadata[:execution_result]
+              if exec_result.respond_to? :pending_message=
+                exec_result.pending_message = "Previous step failed"
+              else
+                exec_result[:pending_message] = "Previous step failed"
+              end
             end
             succeeded = with_indelible_ivars do
               example.run(self, reporter)
