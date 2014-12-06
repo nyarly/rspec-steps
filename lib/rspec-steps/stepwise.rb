@@ -31,6 +31,7 @@ module RSpecStepwise
     def build_example_block
       #variables of concern: reporter, instance
       reporter = @reporter
+      whole_list = self
       @example_block = proc do
         begin
           self.class.filtered_examples.inject(true) do |success, example|
@@ -43,17 +44,14 @@ module RSpecStepwise
             unless success
               example.metadata[:skip] = "Previous step failed"
               RSpec::Core::Pending.mark_pending!(example, example.skip)
-#              example.metadata[:pending] = true
-#              exec_result = example.metadata[:execution_result]
-#              if exec_result.respond_to? :pending_message=
-#                exec_result.pending_message = "Previous step failed"
-#              else
-#                exec_result[:pending_message] = "Previous step failed"
-#              end
             end
             succeeded = with_indelible_ivars do
               example.run(self, reporter)
             end
+            unless example.exception.nil?
+              whole_list.set_exception(example.exception)
+            end
+
             if self.class.fail_fast? && !succeeded
               if RSpec.respond_to? :wants_to_quit=
                 RSpec.wants_to_quit = true

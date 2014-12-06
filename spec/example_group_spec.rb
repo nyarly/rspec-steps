@@ -105,15 +105,17 @@ describe RSpec::Core::ExampleGroup do
       group = nil
       exception = Exception.new "Testing Error"
 
+      result = nil
       sandboxed do
         group = RSpec.steps "Test Steps" do
           before { raise exception }
           it { 1.should == 1 }
           it { 1.should == 1 }
         end
-        group.run
+        result = group.run
       end
 
+      expect(result).to eq(false)
       group.examples.each do |example|
         expect(example.metadata[:execution_result].status).to eq(:failed)
         expect(example.metadata[:execution_result].exception).to eq(exception)
@@ -122,14 +124,16 @@ describe RSpec::Core::ExampleGroup do
 
     it "should mark later examples as pending if one fails" do
       group = nil
+      result = nil
       sandboxed do
         group = RSpec.steps "Test Steps" do
           it { fail "All others fail" }
           it { 1.should == 1 }
         end
-        group.run
+        result = group.run
       end
 
+      expect(result).to eq(false)
       expect(group.examples[0].metadata[:execution_result].status).to eq(:failed)
       expect(group.examples[1].metadata[:execution_result].status).to eq(:pending)
     end
