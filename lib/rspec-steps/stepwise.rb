@@ -232,22 +232,6 @@ module RSpecStepwise
         whole_list_example.run(instance, reporter)
       end
 
-      unless whole_list_example.exception.nil?
-        if fail_fast?
-          if RSpec.respond_to? :wants_to_quit=
-            RSpec.wants_to_quit = true
-          else
-            RSpec.world.wants_to_quit = true
-          end
-        end
-        if respond_to? :fail_filtered_examples
-          fail_filtered_examples(whole_list_example.exception, reporter)
-        else
-          ex = whole_list_example.exception
-          for_filtered_examples(reporter) {|example| example.fail_with_exception(reporter, ex) }
-        end
-      end
-
       result
     end
   end
