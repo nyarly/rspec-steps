@@ -74,5 +74,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency("rspec", ">= 3.0", "< 3.99")
 
-  spec.post_install_message = "Another tidy package brought to you by Judson Lester of Logical Reality Design"
+  #spec.post_install_message = "Another tidy package brought to you by Judson
+  #Lester of Logical Reality Design"
 end
