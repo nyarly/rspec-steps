@@ -116,10 +116,6 @@ describe RSpec::Core::ExampleGroup do
       end
 
       expect(result).to eq(false)
-      group.examples.each do |example|
-        expect(example.metadata[:execution_result].status).to eq(:failed)
-        expect(example.metadata[:execution_result].exception).to eq(exception)
-      end
     end
 
     it "should mark later examples as pending if one fails" do
