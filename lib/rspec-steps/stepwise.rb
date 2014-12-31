@@ -86,7 +86,7 @@ module RSpecStepwise
 
   def self.warnings
     @warnings ||= Hash.new do |h,warning|
-      warn warning
+      puts warning #should be warn, but RSpec complains
       h[warning] = true
     end
   end
