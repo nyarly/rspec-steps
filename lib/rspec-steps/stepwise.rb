@@ -84,6 +84,13 @@ module RSpecStepwise
     end
   end
 
+  def self.warnings
+    @warnings ||= Hash.new do |h,warning|
+      warn warning
+      h[warning] = true
+    end
+  end
+
   module ClassMethods
     #This is hacky and needs a more general solution
     #Something like cloning the current conf and having RSpec::Stepwise::config ?
@@ -126,6 +133,12 @@ module RSpecStepwise
       end
     end
 
+    def warn_about_promotion(scope_name)
+      RSpecStepwise.warnings[
+        "#{scope_name} :each blocks declared for steps are always treated as " +
+        ":all scope (it's possible you want #{scope_name} :step)"]
+    end
+
     def before(*args, &block)
       if args.first == :step
         args.shift
@@ -133,7 +146,7 @@ module RSpecStepwise
         return ((hooks[:before][:step] ||= []) << build_before_hook(options, &block))
       end
       if args.first == :each
-        puts "before blocks declared for steps are always treated as :all scope"
+        warn_about_promotion("before")
       end
       super
     end
@@ -146,14 +159,14 @@ module RSpecStepwise
         return (hooks[:after][:step].unshift build_after_hook(options, &block))
       end
       if args.first == :each
-        puts "after blocks declared for steps are always treated as :all scope"
+        warn_about_promotion("after")
       end
       super
     end
 
     def around(*args, &block)
       if args.first == :each
-        puts "around :each blocks declared for steps are treated as :all scope"
+        warn_about_promotion("around")
       end
       super
     end
