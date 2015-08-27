@@ -20,7 +20,7 @@ module Corundum
       rspec.files_to_run = "spec"
     end
     SimpleCov.new(tk, rspec) do |cov|
-      cov.threshold = 74
+      cov.threshold = 93
     end
     gem = GemBuilding.new(tk)
     GemCutter.new(tk,gem)

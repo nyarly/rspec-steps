@@ -20,14 +20,17 @@ Gem::Specification.new do |spec|
   spec.required_rubygems_version = Gem::Requirement.new(">= 0") if spec.respond_to? :required_rubygems_version=
 
 
-  # Do this: d$@"
   spec.files		= %w[
   lib/rspec-steps.rb
-  lib/rspec-steps/stepwise.rb
-  lib/rspec-steps/duckpunch/example-group.rb
-  lib/rspec-steps/duckpunch/example.rb
-  lib/rspec-steps/duckpunch/hooks.rb
-  lib/rspec-steps/duckpunch/object-extensions.rb
+
+  lib/rspec-steps
+  lib/rspec-steps/step-list.rb
+  lib/rspec-steps/describer.rb
+  lib/rspec-steps/step.rb
+  lib/rspec-steps/dsl.rb
+  lib/rspec-steps/builder.rb
+  lib/rspec-steps/hook.rb
+  lib/rspec-steps/step-result.rb
   doc/README
   doc/Specifications
   spec/example_group_spec.rb
