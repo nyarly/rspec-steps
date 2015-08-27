@@ -1,17 +1,25 @@
+sudo: false
 language: ruby
 script: bundle exec rake ci
-install: .travis-support/cached-bundle install --deployment
 matrix:
   include:
     - gemfile: gemfiles/3.0
       rvm: 1.9.3
     - gemfile: gemfiles/3.1
       rvm: 1.9.3
+    - gemfile: gemfiles/3.2
+      rvm: 1.9.3
+    - gemfile: gemfiles/3.3
+      rvm: 1.9.3
 
 
     - gemfile: gemfiles/3.0
       rvm: 2.0.0
     - gemfile: gemfiles/3.1
+      rvm: 2.0.0
+    - gemfile: gemfiles/3.2
+      rvm: 2.0.0
+    - gemfile: gemfiles/3.3
       rvm: 2.0.0
 
 
@@ -19,8 +27,7 @@ matrix:
       rvm: 2.1.2
     - gemfile: gemfiles/3.1
       rvm: 2.1.2
-env:
-  global:
-  - CUSTOM_BUNDLE_PATH=gemfiles/vendor/bundle AMAZON_S3_BUCKET=lrd-travis-caching
-  - secure: b+5Ei+klIudmG+mWu2y6EgHZ/1GxOYX65jGskmQm85lahFUn9jVUn4IhDbERTmBGjjovZvAZ1cIzZg7hhOH2WRcWJX5My13KZv3hurz2jWeziIQp2LtURi7Ghah/1py+82oFTTQe/18A+ONGN7tksqAlWen/UOmfZzXpNPnyF9s=
-  - secure: FxV30BIED4dP/GkBGF8gtoWirzDzT0Gzn0GxocREp0BZAY9ti5YYoDQixPVCvtQCIKPUjUHnNd8KXdn0HtUhlgLhg7lEE03MoupsXoMZk8gNBeffcCRkzrpVBTmLEhdnoV3UNKpfn2+qCUSqqJimTarDe6k/7F5FzOl3R+xJgxw=
+    - gemfile: gemfiles/3.2
+      rvm: 2.1.2
+    - gemfile: gemfiles/3.3
+      rvm: 2.1.2
