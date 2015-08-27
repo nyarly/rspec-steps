@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    rspec-steps (1.0.4)
+    rspec-steps (1.0.7)
       rspec (>= 3.0, < 3.99)
 
 GEM
@@ -154,3 +154,6 @@ DEPENDENCIES
   metric_fu (~> 4.11.1)
   rspec (~> 3.1.0)
   rspec-steps!
+
+BUNDLED WITH
+   1.10.6
