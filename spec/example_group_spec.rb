@@ -2,17 +2,6 @@ require 'rspec-steps'
 require 'rspec-sandbox'
 
 describe RSpec::Core::ExampleGroup do
-  describe "::steps" do
-    it "should create an ExampleGroup that includes RSpec::Stepwise" do
-      group = nil
-      sandboxed do
-        group = RSpec.steps "Test Steps" do
-        end
-      end
-      expect((class << group; self; end).included_modules).to include(RSpecStepwise::ClassMethods)
-    end
-  end
-
   describe "with Stepwise included" do
     it "should retain instance variables between steps" do
       group = nil
@@ -153,7 +142,6 @@ describe RSpec::Core::ExampleGroup do
     end
 
     it "should not allow nested normal contexts" do
-      pending "A correct approach - in the meantime, this behavior is undefined"
       expect {
         sandboxed do
         RSpec.steps "Basic" do
