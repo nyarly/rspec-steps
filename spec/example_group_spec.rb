@@ -149,7 +149,7 @@ describe RSpec::Core::ExampleGroup do
           end
         end
         end
-      }.to raise_error
+      }.to raise_error(NoMethodError)
     end
   end
 end

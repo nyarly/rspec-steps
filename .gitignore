@@ -12,3 +12,4 @@ corundum/
 .yardoc/
 gh-pages/
 tmp/
+spec/examples.txt

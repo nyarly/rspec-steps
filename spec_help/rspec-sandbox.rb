@@ -24,8 +24,7 @@ module Sandboxing
     @orig_example = RSpec.current_example
     new_config = RSpec::Core::Configuration.new
     new_config.expose_dsl_globally = false
-    new_config.expecting_with_rspec = true
-    #new_config.include(RSpecStepwise, :stepwise => true)
+    #new_config.expecting_with_rspec = true rescue nil
     new_world  = RSpec::Core::World.new(new_config)
     RSpec.configuration = new_config
     RSpec.world = new_world
