@@ -13,7 +13,7 @@ module RSpec::Steps
 
   module DSL
     def steps(*args, &block)
-      describer = Describer.new(*args, &block)
+      describer = Describer.new(args, {:caller => caller}, &block)
       builder = Builder.new(describer)
 
       builder.build_example_group

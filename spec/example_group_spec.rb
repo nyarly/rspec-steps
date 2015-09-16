@@ -18,6 +18,24 @@ describe RSpec::Core::ExampleGroup do
       end
     end
 
+    it "should define let blocks correctly" do
+      group = nil
+      sandboxed do
+        group = RSpec.steps "Test Steps" do
+          let! :array do [] end
+          let :number do 17 end
+          it("adds number to array"){ array << number }
+          it("adds number to array twice"){ array << number }
+          it("checks array"){ expect(array).to eq([17,17])}
+        end
+        group.run
+      end
+
+      group.examples.each do |example|
+        expect(example.metadata[:execution_result].status).to eq(:passed)
+      end
+    end
+
     it "should work with shared_steps/perform steps" do
       group = nil
       sandboxed do

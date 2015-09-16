@@ -1,17 +1,15 @@
 module RSpec::Steps
-  class Step
-    def initialize(*args, &action)
-      @args = args
-      @action = action
+  class Step < Struct.new(:metadata, :args, :action)
+    def initialize(*whatever)
+      super
       @failed_step = nil
     end
-    attr_reader  :args, :action
     attr_accessor :failed_step
 
     def define_on(step_list, example_group)
       step = self
-      example_group.it(*args) do |in_context|
-        step_list.run_only_once(in_context)
+      example_group.it(*args, metadata) do |example|
+        step_list.run_only_once(self)
         result = step_list.result_for(step)
         pending if result.is_after_failed_step?
         expect(result).to have_executed_successfully
