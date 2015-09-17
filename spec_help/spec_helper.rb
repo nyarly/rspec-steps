@@ -2,7 +2,7 @@ require 'rspec'
 
 begin
   require 'cadre'
-rescue LoadErr
+rescue LoadError
 end
 
 #Ungemmer::ungem_gemspec
