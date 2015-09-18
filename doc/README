@@ -75,6 +75,11 @@ absolutely need to make sure you have transactional fixtures off. Otherwise,
 you'll experience problems where the tests and the application appear to see
 completely different databases.
 
+While Steps 2.0 retains it's shift in lifecycle hooks (:each become :all,
+there's a :step hook), this shift *no longer* applies to config.before _et al_
+-- you'll need to use config.before :each to run around each step. This is the
+primary change to the Steps interface that called for a major version bump.
+
 ## Advanced stuff:  shared steps
 
 If you have (for example) two user stories that share the same first N steps but then
@@ -112,11 +117,6 @@ diverge, you can DRY your code out with shared_steps blocks, like so:
 
 The goal is to try to be compatible with as many versions
 of RSpec 3.x as possible.
-
-As of version 2.0, we've reverted to the expected behavior of before :all and
-before :each. Older versions used a new lifecycle mode called :step, which is
-now removed. If you used `rspec-steps` before and wrote `before :step`
-anywhere, change it to `before :each` and all will be well.
 
 We make good use of Travis to check compatibility, however. You can check what
 versions of RSpec and Ruby RSpec-Steps works with here:
