@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
   lib/rspec-steps/builder.rb
   lib/rspec-steps/hook.rb
   lib/rspec-steps/step-result.rb
+  lib/rspec-steps/lets.rb
   doc/README
   doc/Specifications
   spec/example_group_spec.rb
