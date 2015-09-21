@@ -70,6 +70,14 @@ and skip subsequent steps after a failure.
 
 Don't call "describe" inside of "steps".  As of 2.0, this is an error.
 
+As of 2.0, Steps no longer automatically adds its DSL to the top level. If you
+want that behavior (especially if you're updating an older project) add:
+
+```
+require 'rspec-steps/monkeypatch'
+```
+to e.g. `spec_helper.rb.`
+
 If you're using RSpec-Steps with Rails (for instance, with Capybara), you will
 absolutely need to make sure you have transactional fixtures off. Otherwise,
 you'll experience problems where the tests and the application appear to see
