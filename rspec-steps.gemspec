@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name		= "rspec-steps"
-  spec.version		= "2.0.0"
+  spec.version		= "2.0.1"
   author_list = {
     "Judson Lester" => "judson@lrdesign.com",
     "Evan Dorn" => "evan@lrdesign.com"
@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
   lib/rspec-steps/hook.rb
   lib/rspec-steps/step-result.rb
   lib/rspec-steps/lets.rb
+  lib/rspec-steps/monkeypatching.rb
   doc/README
   doc/Specifications
   spec/example_group_spec.rb

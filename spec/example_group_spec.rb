@@ -1,5 +1,6 @@
 require 'rspec-steps'
 require 'rspec-sandbox'
+require 'rspec-steps/monkeypatching'
 
 describe RSpec::Core::ExampleGroup do
   describe "with Stepwise included" do
