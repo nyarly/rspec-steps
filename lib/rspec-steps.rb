@@ -1,4 +1,8 @@
-require 'rspec-steps/duckpunch/object-extensions'
-require 'rspec-steps/duckpunch/example-group'
-require 'rspec-steps/duckpunch/example'
-require 'rspec-steps/duckpunch/hooks'
+require 'rspec'
+require 'rspec-steps/dsl'
+
+module RSpec
+  extend RSpec::Steps::DSL
+end
+
+# open question: add steps to top level?

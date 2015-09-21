@@ -2,17 +2,6 @@ require 'rspec-steps'
 require 'rspec-sandbox'
 
 describe RSpec::Core::ExampleGroup do
-  describe "::steps" do
-    it "should create an ExampleGroup that includes RSpec::Stepwise" do
-      group = nil
-      sandboxed do
-        group = RSpec.steps "Test Steps" do
-        end
-      end
-      expect((class << group; self; end).included_modules).to include(RSpecStepwise::ClassMethods)
-    end
-  end
-
   describe "with Stepwise included" do
     it "should retain instance variables between steps" do
       group = nil
@@ -20,6 +9,24 @@ describe RSpec::Core::ExampleGroup do
         group = RSpec.steps "Test Steps" do
           it("sets @a"){ @a = 1 }
           it("reads @a"){ @a.should == 1}
+        end
+        group.run
+      end
+
+      group.examples.each do |example|
+        expect(example.metadata[:execution_result].status).to eq(:passed)
+      end
+    end
+
+    it "should define let blocks correctly" do
+      group = nil
+      sandboxed do
+        group = RSpec.steps "Test Steps" do
+          let! :array do [] end
+          let :number do 17 end
+          it("adds number to array"){ array << number }
+          it("adds number to array twice"){ array << number }
+          it("checks array"){ expect(array).to eq([17,17])}
         end
         group.run
       end
@@ -153,7 +160,6 @@ describe RSpec::Core::ExampleGroup do
     end
 
     it "should not allow nested normal contexts" do
-      pending "A correct approach - in the meantime, this behavior is undefined"
       expect {
         sandboxed do
         RSpec.steps "Basic" do
@@ -161,7 +167,7 @@ describe RSpec::Core::ExampleGroup do
           end
         end
         end
-      }.to raise_error
+      }.to raise_error(NoMethodError)
     end
   end
 end
