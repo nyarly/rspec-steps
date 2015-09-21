@@ -23,7 +23,6 @@ Gem::Specification.new do |spec|
   spec.files		= %w[
   lib/rspec-steps.rb
 
-  lib/rspec-steps
   lib/rspec-steps/step-list.rb
   lib/rspec-steps/describer.rb
   lib/rspec-steps/step.rb
