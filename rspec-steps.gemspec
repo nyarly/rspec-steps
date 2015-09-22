@@ -9,10 +9,17 @@ Gem::Specification.new do |spec|
   spec.email		= spec.authors.map {|name| author_list[name]}
   spec.summary		= "I want steps in RSpec"
   spec.description	= <<-EOD
-  I don't like Cucumber.  I don't need plain text stories.  My clients either
-  read code or don't read any test documents, so Cucumber is mostly useless to me.
-  But often, especially in full integration tests, it would be nice to have
-  steps in a test.
+  A minimal implementation of integration testing within RSpec.
+  Allows you to build sequential specs, each with a description,
+  but where state is maintained between tests and before/after actions are only
+  triggered at the beginning and end of the entire sequence.  Cool things you
+  can do with this:
+
+  * Build multi-step user stories in plain RSpec syntax. Locate the point of
+    failure quickly, and break up large integrations into sensible steps
+  * Speed up groups of related tests by running your factories only once before
+    the whole group.
+
   EOD
 
   spec.rubyforge_project= spec.name.downcase
