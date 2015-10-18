@@ -1,4 +1,8 @@
 require 'rspec'
-require 'spec_help/ungemmer'
+
+begin
+  require 'cadre'
+rescue LoadError
+end
 
 #Ungemmer::ungem_gemspec

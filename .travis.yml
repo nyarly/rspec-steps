@@ -1,0 +1,37 @@
+sudo: false
+language: ruby
+script: bundle exec rake ci
+matrix:
+  include:
+    - gemfile: gemfiles/3.0
+      rvm: 1.9.3
+    - gemfile: gemfiles/3.1
+      rvm: 1.9.3
+    - gemfile: gemfiles/3.2
+      rvm: 1.9.3
+    - gemfile: gemfiles/3.3
+      rvm: 1.9.3
+
+
+    - gemfile: gemfiles/3.0
+      rvm: 2.0.0
+    - gemfile: gemfiles/3.1
+      rvm: 2.0.0
+    - gemfile: gemfiles/3.2
+      rvm: 2.0.0
+    - gemfile: gemfiles/3.3
+      rvm: 2.0.0
+
+
+    - gemfile: gemfiles/3.0
+      rvm: 2.1.2
+    - gemfile: gemfiles/3.1
+      rvm: 2.1.2
+    - gemfile: gemfiles/3.2
+      rvm: 2.1.2
+    - gemfile: gemfiles/3.3
+      rvm: 2.1.2
+
+notifications:
+  flowdock:
+    secure: "iri0YRV17TZXSZ4IDGHd1e1k52u/Kz9EAqP4oGO1wI1OkIvD5t+2RvkSRoRNpQ080kzkjrlIQwpMaLMgUC9Y8TZ11JEq+uujmotRwOJIFtyAIbBwh3enQlOyPRU9kzdlmBHYtd7nLA92dd0PGfhoti2RkqUtqzgWAlZjqg/52zs="

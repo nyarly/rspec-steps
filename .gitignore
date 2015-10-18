@@ -5,3 +5,14 @@ pkg
 .conductor
 .mtn-ignore
 *.sw?
+rspec-steps-*.gem
+.bundle
+corundum/
+.sass-cache/
+.yardoc/
+gh-pages/
+tmp/
+spec/examples.txt
+.cadre/
+errors.err
+spec_help/cadre.rb

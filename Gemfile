@@ -1,5 +1,7 @@
-source "http://judson:hEi4lOra@gems.lrdesign.com"
-source "http://gemcutter.org"
-source "http://gems.github.com"
+source "https://rubygems.org"
+
+gem 'fuubar'
+gem 'rspec', "~> 3.0.0"
+gem 'cadre'
 
 gemspec
